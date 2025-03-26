@@ -37,9 +37,14 @@ int main(int argc, char *argv[]) {
 
     for (int test = 1; test <= 20; test++) {
         std::cout << "Running kernel for performance run #" << std::setw(2) << test << " ... ";
+        double elapsed_time = 0.0;
         timer.Start();
         MatMatMultiply(A, B, C);
         timer.Stop("Elapsed time : ");
+        elapsed_time += timer.mElapsedTime.count();
+        if (test == 20) {
+            std::cout << "Average elapsed time : " << elapsed_time / 20.0 << "ms" << std::endl;
+        }
     }
 
     return 0;
