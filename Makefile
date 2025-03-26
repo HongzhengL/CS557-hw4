@@ -17,7 +17,7 @@ CXXFLAGS = -Wall -O2 -qopenmp $(PARAM_DEFS)
 CXXFLAGS_MKL = $(CXXFLAGS) $(MKL_LIBS)
 
 SRC = main.cpp MatMatMultiply.cpp Utilities.cpp
-OBJ = $(SRC:%.cpp=build/%.o)
+OBJ = $(SRC:%.cpp=build/obj/%.o)
 
 TARGET = build/main_$(MATRIX_SIZE)_$(BLOCK_SIZE)
 
