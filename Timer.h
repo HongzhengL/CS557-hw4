@@ -20,6 +20,7 @@ struct Timer {
 
     void Stop(const std::string& msg) {
         mStopTime = clock_t::now();
+        mElapsedTime = mStopTime - mStartTime;
         std::chrono::duration<double, std::milli> elapsedTime = mStopTime - mStartTime;
         std::cout << "[" << msg << elapsedTime.count() << "ms]" << std::endl;
     }
