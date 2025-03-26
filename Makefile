@@ -17,23 +17,16 @@ CXXFLAGS = -Wall -O2 -qopenmp $(PARAM_DEFS)
 CXXFLAGS_MKL = $(CXXFLAGS) $(MKL_LIBS)
 
 SRC = main.cpp MatMatMultiply.cpp Utilities.cpp
-OBJ = $(SRC:%.cpp=build/obj/%.o)
 
 TARGET = build/main_$(MATRIX_SIZE)_$(BLOCK_SIZE)
 
 all: $(TARGET)
 
-build/obj/%.o: %.cpp | build/obj
-	$(CXX) -c $< -o $@ $(CXXFLAGS)
-
-$(TARGET): $(OBJ) | build
+$(TARGET): $(SRC) | build
 	$(CXX) $^ -o $@ $(CXXFLAGS_MKL)
 
 build:
 	mkdir -p build
-
-build/obj:
-	mkdir -p build/obj
 
 clean:
 	rm -rf build
