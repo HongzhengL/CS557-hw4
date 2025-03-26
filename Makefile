@@ -23,7 +23,7 @@ TARGET = build/main_$(MATRIX_SIZE)_$(BLOCK_SIZE)
 
 all: $(TARGET)
 
-build/%.o: %.cpp | build/obj
+build/obj/%.o: %.cpp | build/obj
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 $(TARGET): $(OBJ) | build
