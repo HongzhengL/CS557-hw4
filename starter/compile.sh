@@ -2,7 +2,7 @@
 
 # Define the options
 MATRIX_SIZES=(1024 2048 4096)
-BLOCK_SIZES=(16 32 64)
+BLOCK_SIZES=(16 32 64 128 256 512)
 
 # Loop over all combinations
 for MATRIX_SIZE in "${MATRIX_SIZES[@]}"; do
