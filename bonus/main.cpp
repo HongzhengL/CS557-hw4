@@ -26,9 +26,6 @@ int main(int argc, char *argv[]) {
     std::cout << "Matrix dimensions: A(" << MATRIX_A_ROWS << "x" << MATRIX_A_COLS << ") * B(" << MATRIX_B_ROWS << "x"
               << MATRIX_B_COLS << ") = C(" << MATRIX_C_ROWS << "x" << MATRIX_C_COLS << ")" << std::endl;
 
-    double flops = 2.0 * MATRIX_A_ROWS * MATRIX_A_COLS * MATRIX_B_COLS;
-    std::cout << "Total FLOPs: " << flops << " (" << flops / 1e9 << " GFLOPs)" << std::endl;
-
     // Initialize matrices
     InitializeMatrices(A, B);
     Timer timer;
@@ -57,15 +54,13 @@ int main(int argc, char *argv[]) {
         elapsed_time += timer.mElapsedTime.count();
         if (test == 20) {
             std::cout << "Average elapsed time : " << elapsed_time / 20.0 << "ms" << std::endl;
-            std::cout << "Performance: " << (flops / (elapsed_time / 20.0 * 1e-3)) / 1e9 << " GFLOPS" << std::endl;
         }
     }
 
-    // Clean up
-    delete[] static_cast<char *>(Araw);
-    delete[] static_cast<char *>(Braw);
-    delete[] static_cast<char *>(Craw);
-    delete[] static_cast<char *>(referenceCraw);
+    AlignedFree(Araw);
+    AlignedFree(Braw);
+    AlignedFree(Craw);
+    AlignedFree(referenceCraw);
 
     return 0;
 }

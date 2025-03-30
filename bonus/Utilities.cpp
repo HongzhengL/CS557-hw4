@@ -38,3 +38,11 @@ float MatrixMaxDifference(const float (&A)[MATRIX_C_ROWS][MATRIX_C_COLS],
         for (int j = 0; j < MATRIX_C_COLS; j++) result = std::max(result, std::abs(A[i][j] - B[i][j]));
     return result;
 }
+
+void AlignedFree(void* ptr) {
+    if (ptr) {
+        // Retrieve the original pointer stored before the aligned block.
+        void* raw = reinterpret_cast<void**>(ptr)[-1];
+        delete[] static_cast<char*>(raw);
+    }
+}
