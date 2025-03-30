@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the options
-MATRIX_SIZES=(1024 2048 4096)
+MATRIX_SIZES=(512 1024 2048 4096 8192)
 BLOCK_SIZES=(16 32 64 128 256 512)
 
 # Loop over all combinations
