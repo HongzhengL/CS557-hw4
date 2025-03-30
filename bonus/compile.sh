@@ -1,26 +1,17 @@
 #!/bin/bash
 
-# Build rectangular matrix multiplication
-echo "Building rectangular matrix version with A(1024x2048), B(2048x1024)"
-make MATRIX_A_ROWS=1024 MATRIX_A_COLS=2048 MATRIX_B_ROWS=2048 MATRIX_B_COLS=1024 BLOCK_SIZE=32
-echo "Build complete for rectangular matrix version"
-echo "---------------------------------------------"
-
-# Build square matrix versions for comparison
-echo "Building square matrix version with MATRIX_SIZE=1024, BLOCK_SIZE=32"
-make MATRIX_A_ROWS=1024 MATRIX_A_COLS=1024 MATRIX_B_ROWS=1024 MATRIX_B_COLS=1024 BLOCK_SIZE=32
-echo "Build complete for 1024x1024 square matrix version"
-echo "---------------------------------------------"
-
-echo "Building square matrix version with MATRIX_SIZE=2048, BLOCK_SIZE=32"
-make MATRIX_A_ROWS=2048 MATRIX_A_COLS=2048 MATRIX_B_ROWS=2048 MATRIX_B_COLS=2048 BLOCK_SIZE=32
-echo "Build complete for 2048x2048 square matrix version"
-echo "---------------------------------------------"
+# --- Configuration Section ---
+# Rectangular matrix multiplication parameters
+RECT_A_ROWS=1024
+RECT_A_COLS=4096
+RECT_B_ROWS=4096
+RECT_B_COLS=1024
+BLOCK_SIZES=(16 32 64)
 
 # Test different block sizes for rectangular matrices
-for BLOCK_SIZE in 16 64; do
-    echo "Building rectangular matrix version with A(1024x2048), B(2048x1024), BLOCK_SIZE=${BLOCK_SIZE}"
-    make MATRIX_A_ROWS=1024 MATRIX_A_COLS=2048 MATRIX_B_ROWS=2048 MATRIX_B_COLS=1024 BLOCK_SIZE=${BLOCK_SIZE}
+for BLOCK_SIZE in "${BLOCK_SIZES[@]}"; do
+    echo "Building rectangular matrix version with A(${RECT_A_ROWS}x${RECT_A_COLS}), B(${RECT_B_ROWS}x${RECT_B_COLS}), BLOCK_SIZE=${BLOCK_SIZE}"
+    make MATRIX_A_ROWS=${RECT_A_ROWS} MATRIX_A_COLS=${RECT_A_COLS} MATRIX_B_ROWS=${RECT_B_ROWS} MATRIX_B_COLS=${RECT_B_COLS} BLOCK_SIZE=${BLOCK_SIZE}
     echo "Build complete for BLOCK_SIZE=${BLOCK_SIZE}"
     echo "---------------------------------------------"
 done
