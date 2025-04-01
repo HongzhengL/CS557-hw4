@@ -25,27 +25,31 @@ void MatMatMultiply(const float (&A)[MATRIX_A_ROWS][MATRIX_A_COLS], const float 
     static_assert(MATRIX_C_ROWS == MATRIX_A_ROWS, "Output rows must match A rows");
     static_assert(MATRIX_C_COLS == MATRIX_B_COLS, "Output columns must match B columns");
 
+    using const_blocked_matrix_A_t = const float(&)[NBLOCKS_A_ROWS][BLOCK_SIZE][NBLOCKS_A_COLS][BLOCK_SIZE];
+    using const_blocked_matrix_B_t = const float(&)[NBLOCKS_A_COLS][BLOCK_SIZE][NBLOCKS_B_COLS][BLOCK_SIZE];
+    using blocked_matrix_C_t = float(&)[NBLOCKS_A_ROWS][BLOCK_SIZE][NBLOCKS_B_COLS][BLOCK_SIZE];
+
+    auto blockA = reinterpret_cast<const_blocked_matrix_A_t>(A[0][0]);
+    auto blockB = reinterpret_cast<const_blocked_matrix_B_t>(B[0][0]);
+    auto blockC = reinterpret_cast<blocked_matrix_C_t>(C[0][0]);
+
 #pragma omp parallel for
     for (int bi = 0; bi < NBLOCKS_A_ROWS; bi++) {
         for (int bj = 0; bj < NBLOCKS_B_COLS; bj++) {
-            // Initialize local C block to zeros
             for (int ii = 0; ii < BLOCK_SIZE; ii++) {
                 for (int jj = 0; jj < BLOCK_SIZE; jj++) {
-                    localC[ii][jj] = 0.0f;
+                    localC[ii][jj] = 0.;
                 }
             }
 
-            // Multiply blocks
             for (int bk = 0; bk < NBLOCKS_A_COLS; bk++) {
-                // Load blocks from A and B into local memory
                 for (int ii = 0; ii < BLOCK_SIZE; ii++) {
                     for (int jj = 0; jj < BLOCK_SIZE; jj++) {
-                        localA[ii][jj] = A[bi * BLOCK_SIZE + ii][bk * BLOCK_SIZE + jj];
-                        localB[ii][jj] = B[bk * BLOCK_SIZE + ii][bj * BLOCK_SIZE + jj];
+                        localA[ii][jj] = blockA[bi][ii][bk][jj];
+                        localB[ii][jj] = blockB[bk][ii][bj][jj];
                     }
                 }
 
-                // Perform block multiplication
                 for (int ii = 0; ii < BLOCK_SIZE; ii++) {
                     for (int kk = 0; kk < BLOCK_SIZE; kk++) {
 #pragma omp simd
@@ -56,10 +60,9 @@ void MatMatMultiply(const float (&A)[MATRIX_A_ROWS][MATRIX_A_COLS], const float 
                 }
             }
 
-            // Store result back to C
             for (int ii = 0; ii < BLOCK_SIZE; ii++) {
                 for (int jj = 0; jj < BLOCK_SIZE; jj++) {
-                    C[bi * BLOCK_SIZE + ii][bj * BLOCK_SIZE + jj] = localC[ii][jj];
+                    blockC[bi][ii][bj][jj] = localC[ii][jj];
                 }
             }
         }
