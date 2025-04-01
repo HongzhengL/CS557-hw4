@@ -131,6 +131,6 @@ the second one is worse than the first one.
 
 But since the storing process is **NOT** all we have in the algorithm,
 the second one is not four times slower than the first one. In fact, we
-can actually see that they have a relationship of twice slower. However,
-this is not absolutely true, and it would have changed when we have some
-larger matrices that cannot fit entirely inside the cache.
+observe that it is roughly twice as slow. However, this is not absolutely
+true, and it would have changed when we have some larger matrices that
+cannot fit entirely inside the cache.
