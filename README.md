@@ -97,3 +97,40 @@ and potential load imbalance between threads can also account for it.
 Even though the use of block can improve cache locality and reduces cache misses,
 selecting a correct block size is very important, especially when the total size
 of matrix cannot fit entirely inside the cache.
+
+## Bonus
+
+| Matrix Size                | Block Size | Bonus (16T, ms) | Bonus (1T, ms) | Bonus Speed-Up |
+| -------------------------- | ---------- | --------------: | -------------: | -------------: |
+| (1024x4096) \* (4096x1024) | 16         |           51.62 |         336.24 |           6.52 |
+| (1024x4096) \* (4096x1024) | 32         |           51.38 |         317.57 |           6.18 |
+| (1024x4096) \* (4096x1024) | 64         |           71.51 |         350.48 |           4.90 |
+| (2048x2048) \* (2048x2048) | 16         |           87.50 |         652.68 |           7.46 |
+| (2048x2048) \* (2048x2048) | 32         |          100.88 |         601.73 |           5.96 |
+| (2048x2048) \* (2048x2048) | 64         |          128.64 |         703.04 |           5.46 |
+| (4096x1024) \* (1024x4096) | 16         |          229.69 |        1519.67 |           6.61 |
+| (4096x1024) \* (1024x4096) | 32         |          199.28 |        1263.68 |           6.34 |
+| (4096x1024) \* (1024x4096) | 64         |          274.26 |        1417.37 |           5.17 |
+
+### Commentary on Performance Analysis for Bonus
+
+As we can see, the runtime of the matrix size `(2048x2048) * (2048x2048)` is
+very close to the runtime in the base version, with the `Discrepancy between
+candidate kernel and reference kernel` being less than `0.0003` for most
+of the time, this verifies that the implementation of the bonus version is correct.
+
+Observed from the above, even with the same number of multiplications, with
+different shapes of the matrices and different block sizes, the performance
+varies. One possible reason for the behavior is that the resulting matrices.
+For example, for `(1024x4096) * (4096x1024)`, the resulting matrix is `1024x1024`,
+while for `(2048x2048) * (2048x2048)`, the resulting matrix is `2048x2048`.
+The resulting matrix of the second one is four timers larger than the
+first one, and in the algorithm, we do have to save the result to the resulting
+matrix, which takes times. This could explain for why the performance of
+the second one is worse than the first one.
+
+But since the storing process is **NOT** all we have in the algorithm,
+the second one is not four times slower than the first one. In fact, we
+can actually see that they have a relationship of twice slower. However,
+this is not absolutely true, and it would have changed when we have some
+larger matrices that cannot fit entirely inside the cache.
