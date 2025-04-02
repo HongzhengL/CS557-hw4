@@ -89,10 +89,11 @@ single choice can help at one matrix size or shape and hinder at another.
 > speed-up that is not quite proportional with the number of cores used when
 > using all vs. one thread?
 
-Yes. The measured speed-ups (4x - 7x) are all below the ideal scaling of 16x for 16 threads,
-or below the ideal scaling of 8x for 8 physical cores. One of the reasons could be memory
-bandwidth, which becomes significant as more cores access memory simultaneously, or the
-block size becomes larger. Also, the overhead of synchronization, management of threads,
+Yes. The measured speed-ups (4x - 7x) are all below the ideal scaling of 16x for
+16 threads, or below the ideal scaling of 8x for 8 physical cores. One of the
+reasons could be memory bandwidth, which becomes significant as more cores
+access memory simultaneously, or the block size becomes larger. Also,
+the overhead of synchronization, management of threads,
 and potential load imbalance between threads can also account for it.
 Even though the use of block can improve cache locality and reduces cache misses,
 selecting a correct block size is very important, especially when the total size
